@@ -47,13 +47,38 @@ var hospitals = [
   }}
 ]
 
+
+function getParameterByName(name) {
+  name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+  var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+  results = regex.exec(location.search);
+  return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
+var geocoder;
 var map;
 function initMap() {
+  var location = getParameterByName('location');
+  var lat = getParameterByName('lat');
+  var lng = getParameterByName('lng');
+
+  if (lat == '' || lng == '') {
+    lat = '37.779206';
+    lng = '-122.396250';
+  }
+  lat = parseFloat(lat);
+  lng = parseFloat(lng);
+
+  // Create a geocoder
+  geocoder = new google.maps.Geocoder();
+
+  codeAddress(lat, lng);
+
   // Create a map object and specify the DOM element for display.
   map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: 37.779206, lng: -122.396250},
+    center: {lat: lat, lng: lng},
     scrollwheel: false,
-    zoom: 12
+    zoom: 11
   });
 
   var container = document.getElementById("search-list-container");
@@ -95,6 +120,19 @@ function initMap() {
   }
 }
 
+function codeAddress(lat, lng) {
+  var latlon = new google.maps.LatLng(lat, lng);
+  geocoder.geocode( { 'location': latlon }, function(results, status) {
+    if (status == google.maps.GeocoderStatus.OK) {
+      var address = results[0].formatted_address;
+      console.log(address);
+      $("#search-input").val(address);
+    } else {
+      alert("Geocode was not successful for the following reason: " + status);
+    }
+  });
+}
+
 // Adds a marker to the map.
 function addMarker(location, map, label) {
   // Add the marker at the clicked location, and add the next-available label
@@ -105,3 +143,27 @@ function addMarker(location, map, label) {
     map: map
   });
 }
+
+$(document).ready(function() {
+  // Bind action to buttons
+  $("#search-er-button").click(function() {
+    var location = $("#search-er-input").val();
+    window.location.href = "#/search?location=" + location;
+  });
+
+  $("#my-position").click(function() {
+    // Try HTML5 geolocation.
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+
+        window.location.href = "#/search?lat=" + position.coords.latitude +
+          "&lng=" + position.coords.longitude;
+      }, function() {
+        alert("Can't get your current location.");
+      });
+    } else {
+      // Browser doesn't support Geolocation
+      alert("Your browser doesn't support location.");
+    }
+  })
+});
