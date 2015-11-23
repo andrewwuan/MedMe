@@ -21,5 +21,13 @@
     "gulp-angular-filesort": "^1.0.1",
     "streamqueue": "^0.1.1",
     "gulp-rename": "^1.2.0"
+  },
+  "scripts": {
+    "start": "node app",
+    "postinstall": "gulp default"
+  },
+  "dependencies": {
+    "gulp": "^3.9.0",
+    "run-sequence": "^0.3.7"
   }
 }
