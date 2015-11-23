@@ -12,6 +12,7 @@ angular.module('MedMe', [
 var hospitals = [
   {"ST MARY'S MEDICAL CENTER": {
     "wait_time": "14",
+    "transit_time": "8",
     "phone": "415-668-1000",
     "address": "450 Stanyan St, San Francisco, CA 94117",
     "lat": "37.77416",
@@ -19,6 +20,7 @@ var hospitals = [
   }},
   {"CHINESE HOSPITAL": {
     "wait_time": "20",
+    "transit_time": "10",
     "phone": "415-982-2400",
     "address": "845 Jackson St, San Francisco, CA 94117",
     "lat": "37.79552",
@@ -26,6 +28,7 @@ var hospitals = [
   }},
   {"CALIFORNIA PACIFIC MEDICAL CTR-DAVIES CAMPUS HOSP": {
     "wait_time": "21",
+    "transit_time": "9",
     "phone": "415-600-6000",
     "address": "601 Duboce Ave, San Francisco, CA 94117",
     "lat": "37.76824",
@@ -33,6 +36,7 @@ var hospitals = [
   }},
   {"CALIFORNIA PACIFIC MEDICAL CTR-PACIFIC CAMPUS HOSP": {
     "wait_time": "24",
+    "transit_time": "20",
     "phone": "415-600-6000",
     "address": "2333 Buchanan Street, San Francisco, CA 94117",
     "lat": "37.79084",
@@ -40,6 +44,7 @@ var hospitals = [
   }},
   {"CALIFORNIA PACIFIC MEDICAL CTR - ST. LUKE'S CAMPUS": {
     "wait_time": "38",
+    "transit_time": "15",
     "phone": "415-641-6562",
     "address": "3555 Cesar Chavez Street, San Francisco, CA 94117",
     "lat": "37.74766",
@@ -95,12 +100,21 @@ function initMap() {
       var hospitalNode = document.createElement("div");
       hospitalNode.setAttribute("class", "list-group-item list-group-item-home");
 
-      var waitTimeNode = document.createElement("div");
-      var waitTimeText = document.createElement("i");
-      waitTimeText.setAttribute("class", "text-primary");
-      waitTimeText.textContent = hospital[hospitalName].wait_time + " minutes";
-      waitTimeNode.appendChild(waitTimeText);
-      hospitalNode.appendChild(waitTimeNode);
+      var totalTimeNode = document.createElement("div");
+      var totalTimeText = document.createElement("i");
+      totalTimeText.setAttribute("class", "text-primary");
+      totalTimeTextContent = document.createElement("b");
+      totalTimeTextContent.textContent = (parseInt(hospital[hospitalName].wait_time) + parseInt(hospital[hospitalName].transit_time)) + " minutes";
+      totalTimeText.appendChild(totalTimeTextContent);
+      totalTimeNode.appendChild(totalTimeText);
+      hospitalNode.appendChild(totalTimeNode);
+
+      var compTimeNode = document.createElement("div");
+      var compTimeText = document.createElement("i");
+      compTimeText.setAttribute("class", "text-primary");
+      compTimeText.textContent = "wait: " + hospital[hospitalName].wait_time + " minutes | transit: " + hospital[hospitalName].transit_time + " minutes";
+      compTimeNode.appendChild(compTimeText);
+      hospitalNode.appendChild(compTimeNode);
 
       var hospitalInfoNode = document.createElement("div");
       var hospitalNameText = document.createElement("h3");
