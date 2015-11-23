@@ -151,7 +151,7 @@ $(document).ready(function() {
     window.location.href = "#/search?location=" + location;
   });
 
-  $("#my-position").click(function() {
+  $("#my-position,#find-er-now-button").click(function() {
     // Try HTML5 geolocation.
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(function(position) {
